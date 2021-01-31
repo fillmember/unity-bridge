@@ -48,13 +48,17 @@ export class UnityBridgeFirebaseAddon {
       return unsubscriber;
     };
     const isWatchingList = directive === "list";
-    const unsubscribers = [
-      makeDBEvtHandler("value"),
-      isWatchingList && makeDBEvtHandler("child_added"),
-      isWatchingList && makeDBEvtHandler("child_changed"),
-      isWatchingList && makeDBEvtHandler("child_removed"),
-    ].filter(Boolean);
-    this.unsubscribers[path] = unsubscribers;
+    if (isWatchingList) {
+      dbReference.once("value", (snapshot) => {
+        this.b.events.emit(path, {
+          action: "value",
+          data: snapshot.val(),
+        });
+      });
+      this.unsubscribers[path] = [makeDBEvtHandler("child_added"), makeDBEvtHandler("child_changed"), makeDBEvtHandler("child_removed")];
+    } else {
+      this.unsubscribers[path] = [makeDBEvtHandler("value")];
+    }
   };
   onUnityUnwatch = (evt) => {
     const result = this.parseEvent("onUnityUnwatch", evt);

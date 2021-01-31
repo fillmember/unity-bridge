@@ -29,9 +29,11 @@ describe("UnityBridgeFirebaseAddon", () => {
       const bridge = new UnityBridge({ unityInstance: mockUnityInstance() });
       const database: any = firebase.database();
       const refOnFn = jest.fn();
+      const refOnceFn = jest.fn();
       const refOffFn = jest.fn();
       database.ref.mockReturnValue({
         on: refOnFn,
+        once: refOnceFn,
         off: refOffFn,
       });
       new UnityBridgeFirebaseAddon({
@@ -41,17 +43,18 @@ describe("UnityBridgeFirebaseAddon", () => {
       // Watch
       bridge.unityWatch("Test/Players/list", "o", "f", jest.fn());
       expect(database.ref).toBeCalledWith("Test/Players/list");
-      expect(refOnFn).toBeCalledTimes(4);
+      expect(refOnFn).toBeCalledTimes(3);
+      expect(refOnceFn).toBeCalledTimes(1); // <-- value for list
       bridge.unityWatch("Test/Players/detail/yeedog", "o", "f", jest.fn());
       expect(database.ref).toBeCalledWith("Test/Players/detail/yeedog");
-      expect(refOnFn).toBeCalledTimes(5);
+      expect(refOnFn).toBeCalledTimes(4); // <-- value for item
       // Unwatch
       bridge.unityUnwatch("Test/Players/list", "o", "f");
-      expect(refOffFn).toBeCalledTimes(4);
+      expect(refOffFn).toBeCalledTimes(3);
       bridge.unityUnwatch("Test/Players/detail/yeedog", "o", "f");
-      expect(refOffFn).toBeCalledTimes(5);
+      expect(refOffFn).toBeCalledTimes(4);
     });
-    it("#2 data", () => {
+    it("#2 list data", () => {
       const bridge = new UnityBridge({ unityInstance: mockUnityInstance() });
       const eventEmitter = new EventEmitter();
       const database: any = {
