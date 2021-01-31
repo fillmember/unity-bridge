@@ -93,5 +93,30 @@ describe("UnityBridgeFirebaseAddon", () => {
       expect(eventEmitter.listenerCount("child_changed")).toBe(0);
       expect(eventEmitter.listenerCount("child_removed")).toBe(0);
     });
+    it("#3 detail data", () => {
+      const bridge = new UnityBridge({ unityInstance: mockUnityInstance() });
+      const eventEmitter = new EventEmitter();
+      const database: any = {
+        ref: () => eventEmitter,
+      };
+      new UnityBridgeFirebaseAddon({
+        bridge,
+        database,
+      });
+      const handler = jest.fn();
+      bridge.unityWatch("Test/Players/detail/yeedog", "o", "f", handler);
+
+      eventEmitter.emit("value", mockSnapshot("yeedog", { color: "brown" }));
+      expect(handler).toBeCalledTimes(1);
+      expect(handler).toBeCalledWith({ action: "value", data: { color: "brown" } });
+      handler.mockClear();
+      eventEmitter.emit("value", mockSnapshot("yeedog", { color: "red" }));
+      expect(handler).toBeCalledTimes(1);
+      expect(handler).toBeCalledWith({ action: "value", data: { color: "red" } });
+
+      // Unwatch
+      bridge.unityUnwatch("Test/Players/detail/yeedog", "o", "f");
+      expect(eventEmitter.listenerCount("value")).toBe(0);
+    });
   });
 });
