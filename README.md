@@ -13,15 +13,32 @@ This library can also help you handle data subscriptions from Unity to Javascrip
 - when Firebase release official SDK
 - when you don't use Unity WebGL target
 
+## Usage
+
+For setting up the `UnityBridge` & `UnityBridgeFirebaseAddon`, check test/e2e/src/main.ts
+
+For the Unity-side usage, check `example-unity/ExampleUnityScript.cs`.
+
 ## API
 
-```js
-createUnityInstance().then((unityInstance) => {
-  const bridge = new UnityBridge({
-    unityInstance: unityInstance,
-    assignGlobal: "nx.bridge", // bridge is accessible on window.nx.bridge
-  });
-});
-```
+### UnityBridge
 
-TBD...
+...TBD
+
+### UnityBridgeFirebaseAddon
+
+...TBD
+
+## Test
+
+### Jest
+
+`npm t`
+
+### E2E
+
+1. supply your own firebase config
+2. run `npm run test:e2e:dev`
+3. run `npm run test:e2e:cypress`
+
+E2E test TBD...
