@@ -1,2 +1,10 @@
 node_modules/
 .DS_Store
+
+dist
+dist-ssr
+*.local
+
+/test/e2e/public/unity/TemplateData
+/test/e2e/public/unity/index.html
+/test/e2e/src/firebaseConfig.ts
