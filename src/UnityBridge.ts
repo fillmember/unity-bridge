@@ -28,6 +28,8 @@ export class UnityBridge {
     this.options = { ...UnityBridge.defaultOptions, ...options };
     this.unityInstance = this.options.unityInstance;
     set(window, this.options.assignGlobal, this);
+  }
+  public start() {
     this.jsToUnityManager("Ready");
   }
   public jsToUnity(...args: Parameters<UnityInstance["Module"]["SendMessage"]>) {

@@ -15,9 +15,10 @@ describe("UnityBridge", () => {
     const b = new UnityBridge({ unityInstance: mockUnityInstance() });
     expect(window.nx.bridge).toBe(b);
   });
-  it("sends Ready event on consturcted", () => {
+  it("sends Ready event when start method is called", () => {
     const unityInstance = mockUnityInstance();
-    new UnityBridge({ unityInstance });
+    const b = new UnityBridge({ unityInstance });
+    b.start();
     expect(unityInstance.Module.SendMessage).toBeCalledWith(
       UnityBridge.defaultOptions.unityBridgeManagerName,
       UnityBridge.defaultOptions.unityBridgeManagerMethodName,
@@ -91,6 +92,7 @@ describe("UnityBridge", () => {
         functionName = "method1",
         payload = "arg",
         event = "e";
+      b.start();
       expect(unityInstance.Module.SendMessage).toBeCalledTimes(1);
       unityInstance.Module.SendMessage.mockReset();
       const lib = prepareJslib();
