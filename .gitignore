@@ -8,3 +8,10 @@ dist-ssr
 /test/e2e/public/unity/TemplateData
 /test/e2e/public/unity/index.html
 /test/e2e/src/firebaseConfig.ts
+
+/TestUnityProject/Library/
+/TestUnityProject/Logs/
+/TestUnityProject/UserSettings/
+/TestUnityProject/Temp
+/TestUnityProject/Tests.csproj
+/TestUnityProject/Assembly-CSharp.csproj
