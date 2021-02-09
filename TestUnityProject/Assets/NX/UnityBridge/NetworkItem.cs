@@ -1,28 +1,39 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using NX.UnityBridge;
+using NX.UnityBridge.Types;
 
 namespace NX.UnityBridge {
 
     public class NetworkItem : MonoBehaviour
     {
 
-        public GameObject list;
+        public NetworkSystem system;
 
-        public string objectType = "Objects";
-        public string eventTemplate = "%Scene%/%ObjectType%/list";
-
-        // Start is called before the first frame update
         void Start()
         {
-
+            Debug.Log("Item Start");
+            UnityBridgeManager.unityWatch(
+                this.system.GetEventName( this.system.detailEventTemplate , transform.name ),
+                transform.name,
+                "OnData"
+            );
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
+        void OnDestroy() {
+            UnityBridgeManager.unityUnwatch(
+                this.system.GetEventName( this.system.detailEventTemplate , transform.name ),
+                transform.name,
+                "OnData"
+            );
         }
+
+        public Hashtable detail;
+        public void OnData(string payload) {
+            Debug.Log($"Item OnData: {payload}");
+            detail = (Hashtable)Procurios.Public.JSON.JsonDecode(payload);
+        }
+
     }
 
 }
