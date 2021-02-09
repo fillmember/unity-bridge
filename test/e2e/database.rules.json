@@ -6,8 +6,8 @@
           "list": {
             ".read": "auth != null",
             "$obj": {
-              ".write": "newData.exists() || (root.child($game+'/'+$scene+'/Object/'+$obj+'/user_id').val() == auth.uid)",
-              ".validate": "root.child($game+'/'+$scene+'/Object/'+$obj).exists() && newData.exists() && newData.isString()"
+              ".write": "newData.exists() || (root.child($game+'/'+$scene+'/Object/detail/'+$obj+'/user_id').val() == auth.uid)",
+              ".validate": "root.child($game+'/'+$scene+'/Object/detail/'+$obj).exists() && newData.exists() && newData.isString()"
             }
           },
           "detail": {
