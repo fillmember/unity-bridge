@@ -1,13 +1,10 @@
 import unset from "lodash/unset";
 import firebase from "firebase/app";
 import { UnityBridge, UnityWatchEventPayload } from "./UnityBridge";
-type EventParser = (ctx: string, e: UnityWatchEventPayload) => false | { path: string; directive: string };
+type EventParser = (ctx: string, e: UnityWatchEventPayload) => false | { path: string; directive: "list" | "detail" };
 export class UnityBridgeFirebaseAddon {
   static defaultEventParser: EventParser = (_ctx, e) => {
-    // expected event format: $scene/$category/$directive(/$itemKey)
-    const [scene, category, directive, itemKey] = e.event.split("/");
-    if (!scene || !category || !directive) return false;
-    return { path: e.event, scene, category, directive, itemKey };
+    return { path: e.event, directive: e.event.indexOf("list") > -1 ? "list" : "detail" };
   };
   b: UnityBridge;
   db: firebase.database.Database;
