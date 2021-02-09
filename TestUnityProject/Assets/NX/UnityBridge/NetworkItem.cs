@@ -12,7 +12,6 @@ namespace NX.UnityBridge {
 
         void Start()
         {
-            Debug.Log("Item Start");
             UnityBridgeManager.unityWatch(
                 this.system.GetEventName( this.system.detailEventTemplate , transform.name ),
                 transform.name,
