@@ -49,12 +49,6 @@ export class UnityBridgeFirebaseAddon {
     };
     const isWatchingList = directive === "list";
     if (isWatchingList) {
-      dbReference.once("value", (snapshot) => {
-        this.b.events.emit(path, {
-          action: "value",
-          data: snapshot.val(),
-        });
-      });
       this.unsubscribers[path] = [makeDBEvtHandler("child_added"), makeDBEvtHandler("child_changed"), makeDBEvtHandler("child_removed")];
     } else {
       this.unsubscribers[path] = [makeDBEvtHandler("value")];
