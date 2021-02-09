@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
-namespace NX.UnityBridge { 
+namespace NX.UnityBridge {
 
     public class UnityBridgeManager : MonoBehaviour {
 
