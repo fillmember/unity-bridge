@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import "firebase/auth";
 import "firebase/database";
 import { UnityBridge } from "../../../src/UnityBridge";
 import { UnityBridgeFirebaseAddon } from "../../../src/UnityBridgeFirebaseAddon";
@@ -26,6 +27,13 @@ script.onload = () => {
     // @ts-ignore
     .createUnityInstance(document.querySelector("canvas"), config, () => {})
     .then((unityInstance) => {
+      return firebase
+        .auth()
+        .signInAnonymously()
+        .then(() => ({ unityInstance }))
+        .catch((error) => {});
+    })
+    .then(({ unityInstance }) => {
       const bridge = new UnityBridge({ unityInstance, unityBridgeManagerName: "[UnityBridge.js]" });
       bridge.registerUnityToJsHandler("appendYee", (a) => {
         console.log("handler appendYee", a);

@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "$game": {
+      "$scene": {
+        "Object": {
+          "list": {
+            ".read": "auth != null",
+            "$obj": {
+              ".write": "newData.exists() || (root.child($game+'/'+$scene+'/Object/'+$obj+'/user_id').val() == auth.uid)",
+              ".validate": "root.child($game+'/'+$scene+'/Object/'+$obj).exists() && newData.exists() && newData.isString()"
+            }
+          },
+          "detail": {
+            "$obj": {
+              ".read": "auth != null",
+              ".write": "newData.hasChildren(['user_id','type']) && newData.exists() || (data.child('user_id').val() == auth.uid)",
+              "user_id": {
+                ".validate": "newData.val() == auth.uid"
+              },
+              "type": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
