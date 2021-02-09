@@ -26,7 +26,7 @@ script.onload = () => {
     // @ts-ignore
     .createUnityInstance(document.querySelector("canvas"), config, () => {})
     .then((unityInstance) => {
-      const bridge = new UnityBridge({ unityInstance, unityBridgeManagerName: "BridgeManager" });
+      const bridge = new UnityBridge({ unityInstance, unityBridgeManagerName: "[UnityBridge.js]" });
       bridge.registerUnityToJsHandler("appendYee", (a) => {
         console.log("handler appendYee", a);
         return a + "Yee";
@@ -41,7 +41,7 @@ script.onload = () => {
           const result = UnityBridgeFirebaseAddon.defaultEventParser(ctx, event);
           if (result === false) return result;
           return {
-            path: "myGame/" + result.path,
+            path: result.path,
             directive: result.directive,
           };
         },
