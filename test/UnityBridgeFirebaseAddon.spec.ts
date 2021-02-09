@@ -29,11 +29,9 @@ describe("UnityBridgeFirebaseAddon", () => {
       const bridge = new UnityBridge({ unityInstance: mockUnityInstance() });
       const database: any = firebase.database();
       const refOnFn = jest.fn();
-      const refOnceFn = jest.fn();
       const refOffFn = jest.fn();
       database.ref.mockReturnValue({
         on: refOnFn,
-        once: refOnceFn,
         off: refOffFn,
       });
       new UnityBridgeFirebaseAddon({
@@ -44,7 +42,6 @@ describe("UnityBridgeFirebaseAddon", () => {
       bridge.unityWatch("Test/Players/list", "o", "f", jest.fn());
       expect(database.ref).toBeCalledWith("Test/Players/list");
       expect(refOnFn).toBeCalledTimes(3);
-      expect(refOnceFn).toBeCalledTimes(1); // <-- value for list
       bridge.unityWatch("Test/Players/detail/yeedog", "o", "f", jest.fn());
       expect(database.ref).toBeCalledWith("Test/Players/detail/yeedog");
       expect(refOnFn).toBeCalledTimes(4); // <-- value for item
@@ -66,10 +63,6 @@ describe("UnityBridgeFirebaseAddon", () => {
       });
       const handler = jest.fn();
       bridge.unityWatch("Test/Players/list", "o", "f", handler);
-
-      eventEmitter.emit("value", mockSnapshot("list", { yeedog: "0,0" }));
-      expect(handler).toBeCalledTimes(1);
-      expect(handler).toBeCalledWith({ action: "value", data: { yeedog: "0,0" } });
 
       handler.mockClear();
       eventEmitter.emit("child_added", mockSnapshot("mi", "0,2"));

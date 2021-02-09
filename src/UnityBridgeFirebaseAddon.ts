@@ -4,6 +4,8 @@ import { UnityBridge, UnityWatchEventPayload } from "./UnityBridge";
 type EventParser = (ctx: string, e: UnityWatchEventPayload) => false | { path: string; directive: "list" | "detail" };
 export class UnityBridgeFirebaseAddon {
   static defaultEventParser: EventParser = (_ctx, e) => {
+    const segments = e.event.split("/");
+    if (segments.length < 3 || segments.some((value) => value.length === 0)) return false;
     return { path: e.event, directive: e.event.indexOf("list") > -1 ? "list" : "detail" };
   };
   b: UnityBridge;
