@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using NX.UnityBridge.Types;
@@ -20,16 +19,6 @@ namespace NX.UnityBridge
     }
 
     public GameObject itemPrefab;
-
-    public ItemListData ParseListData(string input)
-    {
-      float[] n = input.Split(',').Select(el => float.Parse(el)).ToArray();
-      ItemListData t;
-      t.position = new Vector3(n[0], n[1], n[2]);
-      t.rotation = new Quaternion(n[3], n[4], n[5], n[6]);
-      t.scale = new Vector3(n[7], n[8], n[9]);
-      return t;
-    }
 
     public string SerializeItemData(Transform t)
     {
