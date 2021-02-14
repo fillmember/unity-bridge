@@ -86,7 +86,7 @@ namespace NX.UnityBridge {
         }
 
         private IEnumerator CoroutineSpawnDespawnChildren(float interval) {
-            for(;;) {
+            while(true) {
                 ItemData[] list = itemTree.GetNearby(Camera.main.transform.position, visibleDistance);
                 foreach( KeyValuePair<string, ItemData> kv in itemDictionary ) {
                     ItemData item = kv.Value;

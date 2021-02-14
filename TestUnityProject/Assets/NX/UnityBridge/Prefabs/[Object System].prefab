@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3431257772024500886}
   - component: {fileID: 1062852784537476653}
   m_Layer: 0
-  m_Name: '[UB]Object System'
+  m_Name: '[Object System]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   system: {fileID: 11400000, guid: 16ee14ffe5d70491dbb49e0deaf29920, type: 2}
+  octreeInitialNodeSize: 50
+  visibleDistance: 5
+  manageGameObjectInterval: 0.5
