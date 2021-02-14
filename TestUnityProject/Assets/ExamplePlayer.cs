@@ -8,6 +8,7 @@ public class ExamplePlayer : MonoBehaviour
 {
 
   public NetworkSystem system;
+  public float speed = 2.5f;
 
   // Start is called before the first frame update
   void Start()
@@ -34,19 +35,19 @@ public class ExamplePlayer : MonoBehaviour
     }
     if (Input.GetKey(KeyCode.DownArrow))
     {
-      transform.Translate(Vector3.forward * Time.deltaTime * -1);
+      transform.Translate(Vector3.forward * speed * Time.deltaTime * -1);
     }
     if (Input.GetKey(KeyCode.UpArrow))
     {
-      transform.Translate(Vector3.forward * Time.deltaTime);
+      transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
     if (Input.GetKey(KeyCode.LeftArrow))
     {
-      transform.Translate(Vector3.left * Time.deltaTime);
+      transform.Translate(Vector3.left * speed * Time.deltaTime);
     }
     if (Input.GetKey(KeyCode.RightArrow))
     {
-      transform.Translate(Vector3.right * Time.deltaTime);
+      transform.Translate(Vector3.right * speed * Time.deltaTime);
     }
   }
 }
