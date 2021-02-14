@@ -83,24 +83,24 @@ namespace NX.UnityBridge {
                 yield return new WaitForSeconds(interval);
             }
         }
-        protected void CreateChild( ItemData item ) {
+
+        private void CreateChild( ItemData item ) {
             GameObject child = Instantiate(this.system.itemPrefab, new Vector3(0,0,0), Quaternion.identity, this.transform);
             child.name = item.Key;
             item.SetTransform(child.transform);
         }
-        protected void SetChild( ItemData item ) {
+        private void SetChild( ItemData item ) {
             Transform childTransform = transform.Find(item.Key);
             if (childTransform) {
                 item.SetTransform(childTransform);
             }
         }
-        protected void RemoveChild( ItemData item ) {
+        private void RemoveChild( ItemData item ) {
             Transform childTransform = transform.Find(item.Key);
             if (childTransform) {
                 Destroy(childTransform.gameObject);
             }
         }
-
     }
 
 }
