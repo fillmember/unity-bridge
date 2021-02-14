@@ -24,8 +24,8 @@ namespace NX.UnityBridge.Types
     }
     public void SetTransform(Transform t)
     {
-      t.localPosition = Position;
-      t.localRotation = Rotation;
+      t.position = Position;
+      t.rotation = Rotation;
       t.localScale = Scale;
     }
   }

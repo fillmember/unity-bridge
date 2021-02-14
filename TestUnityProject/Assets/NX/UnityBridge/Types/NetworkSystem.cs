@@ -22,8 +22,8 @@ namespace NX.UnityBridge
 
     public string SerializeItemData(Transform t)
     {
-      Vector3 p = t.localPosition;
-      Quaternion q = t.localRotation;
+      Vector3 p = t.position;
+      Quaternion q = t.rotation;
       Vector3 s = t.localScale;
       return $"{p.x},{p.y},{p.z},{q.x},{q.y},{q.z},{q.w},{s.x},{s.y},{s.z}";
     }
