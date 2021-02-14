@@ -49,6 +49,7 @@ namespace NX.UnityBridge {
                 // Add data entry
                 var item = new ItemData(key, psr);
                 itemTree.Add(item, item.Position);
+                itemDictionary.Add(item.Key, item);
                 // create object if it is nearby
                 if (item.DistanceTo(Camera.main.transform) <= visibleDistance) {
                     CreateChild( item );
