@@ -12,7 +12,7 @@ namespace NX.UnityBridge {
 
         public NetworkSystem system;
         public int octreeInitialNodeSize = 50;
-        public int octreeGetNearbyDistance = 50;
+        public int visibleDistance = 25;
         public float manageGameObjectInterval = 0.5f;
         private PointOctree<ItemData> itemTree;
         private Dictionary<string, ItemData> itemDictionary = new Dictionary<string, ItemData>();
@@ -60,14 +60,14 @@ namespace NX.UnityBridge {
             }
             // Start Proximity Check If not yet
             if (coroutine == null) {
-                coroutine = CoroutineManageGameObject(manageGameObjectInterval);
+                coroutine = CoroutineSpawnDespawnChildren(manageGameObjectInterval);
                 StartCoroutine(coroutine);
             }
         }
 
-        IEnumerator CoroutineManageGameObject(float interval) {
+        private IEnumerator CoroutineSpawnDespawnChildren(float interval) {
             for(;;) {
-                ItemData[] list = itemTree.GetNearby(Camera.main.transform.position, octreeGetNearbyDistance);
+                ItemData[] list = itemTree.GetNearby(Camera.main.transform.position, visibleDistance);
                 foreach( KeyValuePair<string, ItemData> kv in itemDictionary ) {
                     ItemData item = kv.Value;
                     Transform childTransform = transform.Find(item.Key);
