@@ -28,5 +28,9 @@ namespace NX.UnityBridge.Types
       t.rotation = Rotation;
       t.localScale = Scale;
     }
+    public float DistanceTo(Transform t)
+    {
+      return Vector3.Distance(Position, t.position);
+    }
   }
 }
