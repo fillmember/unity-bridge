@@ -18,7 +18,7 @@ namespace NX.UnityBridge {
 
         public List<GameObject> listInstantiateOnReady;
 
-        void JsToUnity(string payload) {
+        public void JsToUnity(string payload) {
             if (payload == "Ready") {
                 listInstantiateOnReady.ForEach(delegate(GameObject obj) {
                     Instantiate(obj, new Vector3(0, 0, 0), Quaternion.identity);
@@ -26,10 +26,6 @@ namespace NX.UnityBridge {
             } else if (payload == "Stop") {
                 // TBD
             }
-        }
-
-        void ForceReady() {
-            this.JsToUnity("Ready");
         }
 
     }
