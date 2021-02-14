@@ -28,7 +28,6 @@ namespace NX.UnityBridge {
         }
 
         public void OnData(string payload) {
-            Debug.Log($"Item OnData: {payload}");
             gameObject.SendMessage("OnDetailUpdate", (Hashtable)Procurios.Public.JSON.JsonDecode(payload));
         }
 
