@@ -11,8 +11,8 @@ namespace NX.UnityBridge {
     {
 
         public NetworkSystem system;
-        public int octreeInitialNodeSize = 50;
-        public int visibleDistance = 25;
+        public float octreeInitialNodeSize = 50;
+        public float visibleDistance = 25;
         public float manageGameObjectInterval = 0.5f;
         private PointOctree<ItemData> itemTree;
         private Dictionary<string, ItemData> itemDictionary = new Dictionary<string, ItemData>();
