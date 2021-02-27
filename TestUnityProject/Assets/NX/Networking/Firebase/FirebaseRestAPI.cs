@@ -32,13 +32,14 @@ namespace NX.Networking.Firebase
   class FirebaseRestAPI : NX.Singleton<FirebaseRestAPI>
   {
     public string baseUrl = "";
+    public string urlPostfix = "?auth=preshare-key";
+    public Dictionary<string, WatchEventObject> watchList = new Dictionary<string, WatchEventObject>();
     private string GetKey(string _event, Transform target, string callbackName) {
       return $"{_event}-${target.name}-${callbackName}";
     }
     private string GetPath(string pathname) {
-      return $"{baseUrl}{pathname}";
+      return $"{baseUrl}{pathname}.json{urlPostfix}";
     }
-    public Dictionary<string, WatchEventObject> watchList = new Dictionary<string, WatchEventObject>();
     public void Watch(string _event, Transform target, string callbackName)
     {
       string key = GetKey(_event, target, callbackName);
