@@ -21,17 +21,17 @@ namespace NX.UnityBridge {
         void Start()
         {
             itemTree = new PointOctree<ItemData>(octreeInitialNodeSize, Camera.main.transform.position, 1);
-            UnityBridgeManager.unityWatch(
+            UnityBridgeManager.Watch(
                 this.system.GetEventName( this.system.listEventTemplate ),
-                transform.name,
+                transform,
                 "OnData"
             );
         }
 
         void OnDestroy() {
-            UnityBridgeManager.unityUnwatch(
+            UnityBridgeManager.Unwatch(
                 this.system.GetEventName( this.system.listEventTemplate ),
-                transform.name,
+                transform,
                 "OnData"
             );
         }

@@ -12,17 +12,17 @@ namespace NX.UnityBridge {
 
         void Start()
         {
-            UnityBridgeManager.unityWatch(
+            UnityBridgeManager.Watch(
                 this.system.GetEventName( this.system.detailEventTemplate , transform.name ),
-                transform.name,
+                transform,
                 "OnData"
             );
         }
 
         void OnDestroy() {
-            UnityBridgeManager.unityUnwatch(
+            UnityBridgeManager.Unwatch(
                 this.system.GetEventName( this.system.detailEventTemplate , transform.name ),
-                transform.name,
+                transform,
                 "OnData"
             );
         }
