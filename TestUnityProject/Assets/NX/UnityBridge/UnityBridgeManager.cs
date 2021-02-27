@@ -5,19 +5,18 @@ using System.Runtime.InteropServices;
 
 namespace NX.UnityBridge {
 
-    public class UnityBridgeManager : MonoBehaviour {
 
-        // // mocked methods for non-WebGL platforms
-        // public static string unityToJs(string _event, string _payload) {
-        //     Debug.Log($"[UB][Test] unityToJs: {_event} : {_payload}");
-        //     return "";
-        // }
-        // public static void unityWatch(string _event, string _objectName, string _functionName) {
-        //     Debug.Log($"[UB][Test] unityWatch: {_event} : {_objectName}.{_functionName}");
-        // }
-        // public static void unityUnwatch(string _event, string _objectName, string _functionName) {
-        //     Debug.Log($"[UB][Test] unityUnwatch: {_event} : {_objectName}.{_functionName}");
-        // }
+    public class UnityBridgeManager : NX.Singleton<UnityBridgeManager> {
+
+        public enum CommunicationMode {
+            JavascriptBridge,
+            RestAPI
+        }
+
+        public List<GameObject> listInstantiateOnReady;
+        public CommunicationMode mode = CommunicationMode.RestAPI;
+
+        #region "Javascript Bridge Methods"
 
         [DllImport("__Internal")]
         public static extern string unityToJs(string _event, string _payload);
@@ -28,17 +27,57 @@ namespace NX.UnityBridge {
         [DllImport("__Internal")]
         public static extern void unityUnwatch(string _event, string _objectName, string _functionName);
 
-        public List<GameObject> listInstantiateOnReady;
+        #endregion
+
+        #region "Methods"
+
+        public static void Watch(string _event, Transform target, string _functionName) {
+            if (Instance.mode == CommunicationMode.JavascriptBridge) {
+                unityWatch( _event, target.name, _functionName);
+            } else if (Instance.mode == CommunicationMode.RestAPI) {
+            }
+        }
+        public static void Unwatch(string _event, Transform target, string _functionName) {
+            if (Instance.mode == CommunicationMode.JavascriptBridge) {
+                unityUnwatch( _event, target.name, _functionName);
+            } else if (Instance.mode == CommunicationMode.RestAPI) {
+            }
+        }
+        public static void Emit(string _event, string _payload) {
+            if (Instance.mode == CommunicationMode.JavascriptBridge) {
+                unityToJs( _event, _payload);
+            } else if (Instance.mode == CommunicationMode.RestAPI) {
+                // TBD
+            }
+        }
+
+        private void InstantiateGameObjects() {
+            listInstantiateOnReady.ForEach(delegate(GameObject obj) {
+                Instantiate(obj, new Vector3(0, 0, 0), Quaternion.identity);
+            });
+        }
+
+        #endregion
+
+        #region "Lifecycle Hooks And Event Handlers"
+
+        public void Start() {
+            if (mode == CommunicationMode.RestAPI) {
+                InstantiateGameObjects();
+            }
+        }
+
+        /* Javascript-side Call Receiver */
 
         public void JsToUnity(string payload) {
             if (payload == "Ready") {
-                listInstantiateOnReady.ForEach(delegate(GameObject obj) {
-                    Instantiate(obj, new Vector3(0, 0, 0), Quaternion.identity);
-                });
+                InstantiateGameObjects();
             } else if (payload == "Stop") {
                 // TBD
             }
         }
+
+        #endregion
 
     }
 
