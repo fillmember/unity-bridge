@@ -11,13 +11,13 @@ namespace NX.UnityBridge
     {
       DrawDefaultInspector();
 
-      NetworkItemList script = (NetworkItemList)target;
-      if (GUILayout.Button("OnData (random)"))
-      {
-        script.OnData(@"
+      // NetworkItemList script = (NetworkItemList)target;
+      // if (GUILayout.Button("OnData (random)"))
+      // {
+      //   script.OnData(@"
 
-        ");
-      }
+      //   ");
+      // }
     }
   }
 
