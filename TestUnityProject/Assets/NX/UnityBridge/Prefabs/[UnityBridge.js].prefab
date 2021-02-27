@@ -45,3 +45,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listInstantiateOnReady:
   - {fileID: 3660404026700026093, guid: ac1714562f2544f7c9ddf66884e3af63, type: 3}
+  mode: 0
