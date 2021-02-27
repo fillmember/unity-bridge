@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using NX.Networking.Firebase;
 
 namespace NX.UnityBridge {
 
@@ -35,12 +36,14 @@ namespace NX.UnityBridge {
             if (Instance.mode == CommunicationMode.JavascriptBridge) {
                 unityWatch( _event, target.name, _functionName);
             } else if (Instance.mode == CommunicationMode.RestAPI) {
+                FirebaseRestAPI.Instance.Watch(_event, target, _functionName);
             }
         }
         public static void Unwatch(string _event, Transform target, string _functionName) {
             if (Instance.mode == CommunicationMode.JavascriptBridge) {
                 unityUnwatch( _event, target.name, _functionName);
             } else if (Instance.mode == CommunicationMode.RestAPI) {
+                FirebaseRestAPI.Instance.Unwatch(_event, target, _functionName);
             }
         }
         public static void Emit(string _event, string _payload) {

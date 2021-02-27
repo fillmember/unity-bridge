@@ -15,3 +15,5 @@ dist-ssr
 /TestUnityProject/Temp
 /TestUnityProject/Tests.csproj
 /TestUnityProject/Assembly-CSharp.csproj
+/TestUnityProject/Assets/NX/UnityBridge/Prefabs/\[Example FirebaseRESTAPI\].prefab.meta
+/TestUnityProject/Assets/NX/UnityBridge/Prefabs/\[Example FirebaseRESTAPI\].prefab
