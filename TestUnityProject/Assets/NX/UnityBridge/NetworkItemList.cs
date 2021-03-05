@@ -36,45 +36,36 @@ namespace NX.UnityBridge {
             );
         }
 
-        public void OnData(string payload) {
-            // Parse JSON
-            Hashtable parsedJson = (Hashtable)Procurios.Public.JSON.JsonDecode(payload);
-            string action = (string)parsedJson["action"];
-            Hashtable data = (Hashtable)parsedJson["data"];
-            string key = (string)data["key"];
-            string psr = (string)data["value"];
+        public void UpdateData(string action, string key, string psr) {
             bool isItemInDictionary = itemDictionary.ContainsKey(key);
-            // Add/Update/Remove item data
-            if (!isItemInDictionary && action == "child_added") {
-                // Add data entry
-                var item = new ItemData(key, psr);
-                itemTree.Add(item, item.Position);
-                itemDictionary.Add(item.Key, item);
-                // create object if it is nearby
-                if (item.DistanceTo(Camera.main.transform) <= visibleDistance) {
-                    CreateChild( item );
+            if (action == "child_added" || action == "child_changed") {
+                if (isItemInDictionary) {
+                    // Set existing data entry
+                    ItemData existingItem;
+                    bool exists = itemDictionary.TryGetValue(key, out existingItem);
+                    // re-add the item again into the tree, as it is not possible to move it directly to another position
+                    itemTree.Remove(existingItem);
+                    existingItem.CalculatePSR( psr );
+                    itemTree.Add(existingItem, existingItem.Position);
+                    // set existing item game object, because we want nearby data update to be immediate
+                    if (existingItem.DistanceTo(Camera.main.transform) <= visibleDistance) {
+                        SetChild( existingItem );
+                    }
+                } else {
+                    // Add data entry
+                    var item = new ItemData(key, psr);
+                    itemTree.Add(item, item.Position);
+                    itemDictionary.Add(item.Key, item);
+                    // create object if it is nearby
+                    if (item.DistanceTo(Camera.main.transform) <= visibleDistance) {
+                        CreateChild( item );
+                    }
                 }
-            } else if (isItemInDictionary && (action == "child_added") || (action == "child_changed")) {
-                // Set existing data entry
-                var existingItem = itemDictionary[key];
-                // re-add the item again into the tree, as it is not possible to move it directly to another position
-                itemTree.Remove(existingItem);
-                existingItem.CalculatePSR( psr );
-                itemTree.Add(existingItem, existingItem.Position);
-                // set existing item game object, because we want nearby data update to be immediate
-                if (existingItem.DistanceTo(Camera.main.transform) <= visibleDistance) {
-                    SetChild( existingItem );
-                }
-            } else if (isItemInDictionary && (action == "child_removed")) {
-                // Remove existing data entry
-                var existingItem = itemDictionary[key];
-                if (existingItem == null) {
-                    return;
-                }
-                itemTree.Remove(existingItem);
-                itemDictionary.Remove(key);
-                // Remove game object if nearby
-                if (existingItem.DistanceTo(Camera.main.transform) <= visibleDistance) {
+            } else if (action == "child_removed") {
+                if (isItemInDictionary) {
+                    var existingItem = itemDictionary[key];
+                    itemTree.Remove(existingItem);
+                    itemDictionary.Remove(key);
                     RemoveChild( existingItem );
                 }
             }
@@ -82,6 +73,20 @@ namespace NX.UnityBridge {
             if (coroutine == null) {
                 coroutine = CoroutineSpawnDespawnChildren(manageGameObjectInterval);
                 StartCoroutine(coroutine);
+            }
+        }
+
+        public void OnData(object input) {
+            if (input is string) {
+                Hashtable parsedJson = (Hashtable)Procurios.Public.JSON.JsonDecode((string)input);
+                string action = (string)parsedJson["action"];
+                Hashtable data = (Hashtable)parsedJson["data"];
+                string key = (string)data["key"];
+                string psr = (string)data["value"];
+                UpdateData(action, key, psr);
+            } else if (input is Dictionary<string, string>) {
+                Dictionary<string,string> dict = (Dictionary<string,string>) input;
+                UpdateData(dict["action"],dict["key"],dict["value"]);
             }
         }
 

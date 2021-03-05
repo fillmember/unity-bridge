@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using BestHTTP.ServerSentEvents;
 
@@ -7,7 +8,7 @@ namespace NX.Networking.Firebase
 {
   class WatchEventObject
   {
-    private int readBuffer = 0;
+    private int readBuffer = 1;
     private string path;
     private Transform target;
     private string callbackName;
@@ -18,15 +19,50 @@ namespace NX.Networking.Firebase
       target = _target;
       callbackName = _callbackName;
       source = new EventSource(new Uri(path), readBuffer);
-      source.On("put", OnPut);
-      source.On("patch", OnPatch);
+      if (path.Contains("/list")) {
+        source.On("put", OnListPut);
+        source.On("patch", OnListPatch);
+      } else if (path.Contains("/detail")) {
+        source.On("put", OnItemUpdate);
+        source.On("patch", OnItemUpdate);
+      }
       source.Open();
     }
-    void OnPut(EventSource source, Message msg) {
-      Debug.Log(string.Format("== FB OnPut: <color=yellow>{0}</color>", msg.Data.ToString()));
+    public void Close() {
+      source.Close();
     }
-    void OnPatch(EventSource source, Message msg) {
-      Debug.Log("== FB OnPatch " + msg.Data);
+    private void OnItemUpdate(EventSource source, Message msg) {
+      Hashtable parsed = (Hashtable)Procurios.Public.JSON.JsonDecode(msg.Data.ToString());
+      Emit( (Hashtable) parsed["data"] );
+    }
+    private void OnListPut(EventSource source, Message msg) {
+      Hashtable parsed = (Hashtable)Procurios.Public.JSON.JsonDecode(msg.Data.ToString());
+      string path = (string)parsed["path"];
+      if (path == "/") {
+        Hashtable list = (Hashtable)parsed["data"];
+        foreach(DictionaryEntry entry in list) {
+          Dictionary<string,string> parameters = new Dictionary<string, string>();
+          parameters.Add("action","child_added");
+          parameters.Add("key", (string)entry.Key);
+          parameters.Add("value",(string)entry.Value);
+          Emit(parameters);
+        }
+      } else {
+        Dictionary<string,string> parameters = new Dictionary<string, string>();
+        string key = path.Substring(1);
+        string data = (string)parsed["data"];
+        string action = data == null ? "child_removed" : "child_changed";
+        parameters.Add("action", action);
+        parameters.Add("key", key );
+        parameters.Add("value", data );
+        Emit(parameters);
+      }
+    }
+    private void OnListPatch(EventSource source, Message msg) {
+      Debug.Log("== FB OnPatch " + msg.Data.ToString());
+    }
+    private void Emit(object payload) {
+      target.SendMessage(callbackName, payload);
     }
   }
   class FirebaseRestAPI : NX.Singleton<FirebaseRestAPI>
@@ -50,6 +86,14 @@ namespace NX.Networking.Firebase
     public void Unwatch(string _event, Transform target, string callbackName)
     {
       string key = GetKey(_event, target, callbackName);
+      if (!watchList.ContainsKey(key)) {
+        return;
+      }
+      WatchEventObject obj;
+      watchList.TryGetValue(key, out obj);
+      if (obj != null) {
+        obj.Close();
+      }
       watchList.Remove(key);
     }
   }
